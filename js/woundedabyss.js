@@ -4,7 +4,7 @@ var WoundedAbyss = {
             cnv: cnv, ctx: cnv.getContext('2d'),
             w: 800, h: 600
         }, game = {
-            w: 0, h: 0,
+            w: 0, h: 0, offsetX: 0, offsetY: 0,
             map: [], objects: [], player: {},
             generateLevel: function(level) {
                 var req = new XMLHttpRequest();
@@ -39,18 +39,49 @@ var WoundedAbyss = {
                 }
             },
             renderAll: function() {
+                // scroll if necessary
+                var playerPxX = game.player.x * 32 + 16, playerPxY = game.player.y * 32 + 16;
+                var THRESHOLD = 40, PADDING = 10;
+                if (playerPxX - THRESHOLD < game.offsetX) {
+                    console.log(1);
+                    game.offsetX = Math.max(0, playerPxX + THRESHOLD + PADDING - dom.w);
+                    game.offsetX = Math.min(game.offsetX, game.player.x * 32);
+                }
+                if (playerPxX + THRESHOLD > game.offsetX + dom.w) {
+                    console.log(2);
+                    game.offsetX = Math.min(game.w * 32 - dom.w, playerPxX - THRESHOLD - PADDING);
+                    game.offsetX = Math.min(game.offsetX, game.player.x * 32 + 32);
+                }
+                if (playerPxY - THRESHOLD < game.offsetY) {
+                    console.log(3);
+                    game.offsetY = Math.max(0, playerPxY + THRESHOLD + PADDING - dom.h);
+                    game.offsetY = Math.min(game.offsetY, game.player.y * 32);
+                }
+                if (playerPxY + THRESHOLD > game.offsetY + dom.h) {
+                    console.log(4);
+                    game.offsetY = Math.min(game.h * 32 - dom.h, playerPxY - THRESHOLD - PADDING);
+                    game.offsetY = Math.min(game.offsetY, game.player.y * 32 + 32);
+                }
+
                 for (var x = 0; x < game.w; ++x) {
                     for (var y = 0; y < game.h; ++y) {
-                        dom.ctx.drawImage(game.map[y][x].img, x * 32, y * 32);
+                        game.render(game.map[y][x].img, x, y);
                     }
                 }
 
                 for (var i = 0; i < game.objects.length; ++i) {
                     var o = game.objects[i];
-                    dom.ctx.drawImage(o.img, o.x * 32, o.y * 32);
+                    game.render(o);
                 }
 
-                dom.ctx.drawImage(game.player.img, game.player.x * 32, game.player.y * 32);
+                game.render(game.player);
+            },
+            render: function(o, x, y) {
+                if (x === undefined && y === undefined) {
+                    dom.ctx.drawImage(o.img, o.x * 32 - game.offsetX, o.y * 32 - game.offsetY);
+                } else {
+                    dom.ctx.drawImage(o, x * 32 - game.offsetX, y * 32 - game.offsetY);
+                }
             },
             tile: function(type) {
                 var t = {
