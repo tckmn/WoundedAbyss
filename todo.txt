@@ -6,9 +6,9 @@ Progressive / hierarchical todo list
         [a] The player
         [b] The ground
         [c] A tree
-    B. Create a procedural map generator:
-        a. Make the "ground" for everything the normal ground
-        b. Add trees in random places
+    [B] Create a procedural map generator:
+        [a] Make the "ground" for everything the normal ground
+        [b] Add trees in random places
     C. Add the player. No movement yet, just get him up.
 2.
 

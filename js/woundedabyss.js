@@ -19,10 +19,12 @@ var WoundedAbyss = {
                 }
             },
             generateObjects: function(level) {
-                var tree = game.tile('tree');
-                tree.x = 1;
-                tree.y = 1;
-                game.objects = [tree];
+                for (var i = 0; i < 20; ++i) {
+                    var tree = game.tile('tree');
+                    tree.x = Math.floor(Math.random() * game.map.length);
+                    tree.y = Math.floor(Math.random() * game.map[0].length);
+                    game.objects.push(tree);
+                }
             },
             renderAll: function() {
                 for (var x = 0; x < game.map[0].length; ++x) {
