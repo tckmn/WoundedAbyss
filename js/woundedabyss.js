@@ -4,23 +4,33 @@ var WoundedAbyss = {
             cnv: cnv, ctx: cnv.getContext('2d'),
             w: 800, h: 600
         }, game = {
-            w: Math.floor(dom.w / 32), h: Math.floor(dom.h / 32),
+            w: 0, h: 0,
             map: [], objects: [], player: {},
             generateLevel: function(level) {
-                game.generateMap(level);
-                game.generateObjects(level);
-                game.player = game.tile('player');
-                game.player.x = game.player.y = 0;
-                game.renderAll();
+                var req = new XMLHttpRequest();
+                req.onload = function() {
+                    game.generateMap(this.responseText);
+                    game.generateObjects(this.responseText);
+                    game.player = game.tile('player');
+                    game.player.x = game.player.y = 0;
+                    game.renderAll();
+                };
+                req.open('get', 'lvl/' + level + '.lvl', true);
+                req.send();
             },
-            generateMap: function(level) {
-                for (var x = 0; x < game.map[0].length; ++x) {
-                    for (var y = 0; y < game.map.length; ++y) {
-                        game.map[y][x] = game.tile('grass');
+            generateMap: function(data) {
+                game.map = [];
+                game.w = +data.split('\n')[0].split(',')[0];
+                game.h = +data.split('\n')[0].split(',')[1];
+                for (var y = 0; y < game.h; ++y) {
+                    var row = [];
+                    for (var x = 0; x < game.w; ++x) {
+                        row.push(game.tile('grass'));
                     }
+                    game.map.push(row);
                 }
             },
-            generateObjects: function(level) {
+            generateObjects: function(data) {
                 for (var i = 0; i < 20; ++i) {
                     var tree = game.tile('tree');
                     tree.x = Math.floor(Math.random() * game.w);
@@ -29,8 +39,8 @@ var WoundedAbyss = {
                 }
             },
             renderAll: function() {
-                for (var x = 0; x < game.map[0].length; ++x) {
-                    for (var y = 0; y < game.map.length; ++y) {
+                for (var x = 0; x < game.w; ++x) {
+                    for (var y = 0; y < game.h; ++y) {
                         dom.ctx.drawImage(game.map[y][x].img, x * 32, y * 32);
                     }
                 }
@@ -82,18 +92,11 @@ var WoundedAbyss = {
 
                 function onImagesPreloaded() {
                     // initialize level 1
-                    game.map = [];
-                    for (var y = 0; y < game.h; ++y) {
-                        game.map[y] = [];
-                        for (var x = 0; x < game.w; ++x) {
-                            game.map[y][x] = {};
-                        }
-                    }
                     game.generateLevel(1);
 
                     // add event listeners
                     window.addEventListener('keydown', function(e) {
-                        e.preventDefault();
+                        var preventDefault = true;
                         switch (e.which || e.keyCode) {
                         case 37: // left
                             --game.player.x;
@@ -111,7 +114,10 @@ var WoundedAbyss = {
                             ++game.player.y;
                             game.renderAll();
                             break;
+                        default:
+                            preventDefault = false;
                         }
+                        if (preventDefault) e.preventDefault();
                     });
                 }
             }
