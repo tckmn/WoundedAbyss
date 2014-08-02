@@ -1,0 +1,16 @@
+Legend: n. == incomplete, [n] = complete
+
+Progressive / hierarchical todo list
+1. Getting something on the screen!
+    [A] Create or find some simple placeholder images:
+        [a] The player
+        [b] The ground
+        [c] A tree
+    B. Create a procedural map generator:
+        a. Make the "ground" for everything the normal ground
+        b. Add trees in random places
+    C. Add the player. No movement yet, just get him up.
+2.
+
+Misc. / other stuff to do
+1. Attribute the place where I got the AMAZING free tileset
