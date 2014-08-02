@@ -7,9 +7,12 @@ var WoundedAbyss = {
             w: Math.floor(dom.w / 32), h: Math.floor(dom.h / 32),
             map: [],
             objects: [],
+            player: {},
             generateLevel: function(level) {
                 game.generateMap(level);
                 game.generateObjects(level);
+                game.player = game.tile('player');
+                game.player.x = game.player.y = 0;
                 game.renderAll();
             },
             generateMap: function(level) {
@@ -38,6 +41,8 @@ var WoundedAbyss = {
                     var o = game.objects[i];
                     dom.ctx.drawImage(o.img, o.x * 32, o.y * 32);
                 }
+
+                dom.ctx.drawImage(game.player.img, game.player.x * 32, game.player.y * 32);
             },
             tile: function(type) {
                 var t = {
@@ -46,6 +51,9 @@ var WoundedAbyss = {
                     },
                     tree: {
                         img: game.images.tree
+                    },
+                    player: {
+                        img: game.images.player
                     }
                 }[type];
                 if (t === undefined) t = {};
@@ -54,7 +62,8 @@ var WoundedAbyss = {
             },
             images: {
                 grass: 'img/grass.png',
-                tree: 'img/tree.png'
+                tree: 'img/tree.png',
+                player: 'img/player.png'
             },
             init: function() {
                 // preload images
