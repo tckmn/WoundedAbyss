@@ -4,6 +4,7 @@ var WoundedAbyss = {
             cnv: cnv, ctx: cnv.getContext('2d'),
             w: 800, h: 600
         }, game = {
+            w: Math.floor(dom.w / 32), h: Math.floor(dom.h / 32),
             map: [],
             objects: [],
             generateLevel: function(level) {
@@ -21,8 +22,8 @@ var WoundedAbyss = {
             generateObjects: function(level) {
                 for (var i = 0; i < 20; ++i) {
                     var tree = game.tile('tree');
-                    tree.x = Math.floor(Math.random() * game.map.length);
-                    tree.y = Math.floor(Math.random() * game.map[0].length);
+                    tree.x = Math.floor(Math.random() * game.w);
+                    tree.y = Math.floor(Math.random() * game.h);
                     game.objects.push(tree);
                 }
             },
@@ -35,7 +36,7 @@ var WoundedAbyss = {
 
                 for (var i = 0; i < game.objects.length; ++i) {
                     var o = game.objects[i];
-                    dom.ctx.drawImage(o.img, o.y * 32, o.x * 32);
+                    dom.ctx.drawImage(o.img, o.x * 32, o.y * 32);
                 }
             },
             tile: function(type) {
@@ -75,9 +76,9 @@ var WoundedAbyss = {
                 function onImagesPreloaded() {
                     // initialize level 1
                     game.map = [];
-                    for (var y = 0; y < 18; ++y) {
+                    for (var y = 0; y < game.h; ++y) {
                         game.map[y] = [];
-                        for (var x = 0; x < 25; ++x) {
+                        for (var x = 0; x < game.w; ++x) {
                             game.map[y][x] = {};
                         }
                     }
