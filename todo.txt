@@ -2,7 +2,7 @@ Legend: n. == incomplete, [n] = complete
 
 - Attribute the place where I got the AMAZING free tileset
 - Add player movement:
-    1. Allow movement with arrow keys
+    [1] Allow movement with arrow keys
     2. "Collision detection" so player can't move onto objects
         a. Extend with an "onCollide" thing for objects
     3. Allow movement with mouse and touch

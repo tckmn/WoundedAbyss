@@ -5,9 +5,7 @@ var WoundedAbyss = {
             w: 800, h: 600
         }, game = {
             w: Math.floor(dom.w / 32), h: Math.floor(dom.h / 32),
-            map: [],
-            objects: [],
-            player: {},
+            map: [], objects: [], player: {},
             generateLevel: function(level) {
                 game.generateMap(level);
                 game.generateObjects(level);
@@ -92,6 +90,29 @@ var WoundedAbyss = {
                         }
                     }
                     game.generateLevel(1);
+
+                    // add event listeners
+                    window.addEventListener('keydown', function(e) {
+                        e.preventDefault();
+                        switch (e.which || e.keyCode) {
+                        case 37: // left
+                            --game.player.x;
+                            game.renderAll();
+                            break;
+                        case 38: // up
+                            --game.player.y;
+                            game.renderAll();
+                            break;
+                        case 39: // right
+                            ++game.player.x;
+                            game.renderAll();
+                            break;
+                        case 40: // down
+                            ++game.player.y;
+                            game.renderAll();
+                            break;
+                        }
+                    });
                 }
             }
         };
