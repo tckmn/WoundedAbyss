@@ -31,11 +31,11 @@ var WoundedAbyss = {
                 }
             },
             generateObjects: function(data) {
-                for (var i = 0; i < 20; ++i) {
-                    var tree = game.tile('tree');
-                    tree.x = Math.floor(Math.random() * game.w);
-                    tree.y = Math.floor(Math.random() * game.h);
-                    game.objects.push(tree);
+                for (var i = 0; i < 40; ++i) {
+                    var tile = game.tile(Math.random() < 0.5 ? 'tree' : 'fireplace');
+                    tile.x = Math.floor(Math.random() * game.w);
+                    tile.y = Math.floor(Math.random() * game.h);
+                    game.objects.push(tile);
                 }
             },
             move: function(o, dx, dy) {
@@ -54,22 +54,18 @@ var WoundedAbyss = {
                 var playerPxX = game.player.x * 32 + 16, playerPxY = game.player.y * 32 + 16;
                 var THRESHOLD = 40, PADDING = 10;
                 if (playerPxX - THRESHOLD < game.offsetX) {
-                    console.log(1);
                     game.offsetX = Math.max(0, playerPxX + THRESHOLD + PADDING - dom.w);
                     game.offsetX = Math.min(game.offsetX, game.player.x * 32);
                 }
                 if (playerPxX + THRESHOLD > game.offsetX + dom.w) {
-                    console.log(2);
                     game.offsetX = Math.min(game.w * 32 - dom.w, playerPxX - THRESHOLD - PADDING);
                     game.offsetX = Math.min(game.offsetX, game.player.x * 32 + 32);
                 }
                 if (playerPxY - THRESHOLD < game.offsetY) {
-                    console.log(3);
                     game.offsetY = Math.max(0, playerPxY + THRESHOLD + PADDING - dom.h);
                     game.offsetY = Math.min(game.offsetY, game.player.y * 32);
                 }
                 if (playerPxY + THRESHOLD > game.offsetY + dom.h) {
-                    console.log(4);
                     game.offsetY = Math.min(game.h * 32 - dom.h, playerPxY - THRESHOLD - PADDING);
                     game.offsetY = Math.min(game.offsetY, game.player.y * 32 + 32);
                 }
@@ -88,11 +84,19 @@ var WoundedAbyss = {
                 game.render(game.player);
             },
             render: function(o, x, y) {
+                var img, imgX, imgY;
                 if (x === undefined && y === undefined) {
-                    dom.ctx.drawImage(o.img, o.x * 32 - game.offsetX, o.y * 32 - game.offsetY);
+                    img = o.img;
+                    imgFrame = o.frame || 0;
+                    imgX = o.x * 32 - game.offsetX;
+                    imgY = o.y * 32 - game.offsetY;
                 } else {
-                    dom.ctx.drawImage(o, x * 32 - game.offsetX, y * 32 - game.offsetY);
+                    img = o;
+                    imgFrame = 0;
+                    imgX = x * 32 - game.offsetX;
+                    imgY = y * 32 - game.offsetY;
                 }
+                dom.ctx.drawImage(img, imgFrame * 32, 0, 32, 32, imgX, imgY, 32, 32);
             },
             tile: function(type) {
                 var t = {
@@ -105,16 +109,25 @@ var WoundedAbyss = {
                     },
                     player: {
                         img: game.images.player
+                    },
+                    fireplace: {
+                        img: game.images.fireplace,
+                        animated: true
                     }
                 }[type];
                 if (t === undefined) t = {};
+                if (t.animated) {
+                    t.frame = 0;
+                    t.frames = t.img.width / 32;
+                }
                 t.type = type;
                 return t;
             },
             images: {
                 grass: 'img/grass.png',
                 tree: 'img/tree.png',
-                player: 'img/player.png'
+                player: 'img/player.png',
+                fireplace: 'img/fireplace.png'
             },
             init: function() {
                 // preload images
@@ -158,6 +171,16 @@ var WoundedAbyss = {
                         }
                         if (preventDefault) e.preventDefault();
                     });
+
+                    // for animated tiles
+                    setInterval(function() {
+                        for (var i = 0; i < game.objects.length; ++i) {
+                            if (game.objects[i].frame !== undefined) {
+                                game.objects[i].frame = (game.objects[i].frame + 1) % game.objects[i].frames;
+                            }
+                        }
+                        game.renderAll();
+                    }, 200);
                 }
             }
         };

@@ -12,3 +12,4 @@ Legend: n. == incomplete, [n] = complete
 - Store level data in file
     1. Figure out a format
     2. Use it
+- requestAnimationFrame instead of setInterval
