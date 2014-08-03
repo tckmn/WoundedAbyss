@@ -154,15 +154,19 @@ var WoundedAbyss = {
                     window.addEventListener('keydown', function(e) {
                         var preventDefault = true;
                         switch (e.which || e.keyCode) {
+                        case 65: // A
                         case 37: // left
                             game.move(game.player, -1, 0);
                             break;
+                        case 87: // W
                         case 38: // up
                             game.move(game.player, 0, -1);
                             break;
+                        case 68: // D
                         case 39: // right
                             game.move(game.player, 1, 0);
                             break;
+                        case 83: // S
                         case 40: // down
                             game.move(game.player, 0, 1);
                             break;
