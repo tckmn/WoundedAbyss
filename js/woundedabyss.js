@@ -38,6 +38,17 @@ var WoundedAbyss = {
                     game.objects.push(tree);
                 }
             },
+            move: function(o, dx, dy) {
+                var nx = o.x + dx, ny = o.y + dy;
+                if (nx < 0 || nx >= game.w || ny < 0 || ny > game.h) return;
+                if (game.map[nx][ny].solid) return;
+                for (var i = 0; i < game.objects.length; ++i) {
+                    if (game.objects[i].solid && game.objects[i].x == nx && game.objects[i].y == ny) return;
+                }
+                o.x = nx;
+                o.y = ny;
+                game.renderAll();
+            },
             renderAll: function() {
                 // scroll if necessary
                 var playerPxX = game.player.x * 32 + 16, playerPxY = game.player.y * 32 + 16;
@@ -89,7 +100,8 @@ var WoundedAbyss = {
                         img: game.images.grass
                     },
                     tree: {
-                        img: game.images.tree
+                        img: game.images.tree,
+                        //solid: true
                     },
                     player: {
                         img: game.images.player
@@ -130,20 +142,16 @@ var WoundedAbyss = {
                         var preventDefault = true;
                         switch (e.which || e.keyCode) {
                         case 37: // left
-                            --game.player.x;
-                            game.renderAll();
+                            game.move(game.player, -1, 0);
                             break;
                         case 38: // up
-                            --game.player.y;
-                            game.renderAll();
+                            game.move(game.player, 0, -1);
                             break;
                         case 39: // right
-                            ++game.player.x;
-                            game.renderAll();
+                            game.move(game.player, 1, 0);
                             break;
                         case 40: // down
-                            ++game.player.y;
-                            game.renderAll();
+                            game.move(game.player, 0, 1);
                             break;
                         default:
                             preventDefault = false;
