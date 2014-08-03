@@ -175,6 +175,29 @@ var WoundedAbyss = {
                         }
                         if (preventDefault) e.preventDefault();
                     });
+                    var cnvBounds = dom.cnv.getBoundingClientRect(), cnvX = cnvBounds.left, cnvY = cnvBounds.top;
+                    window.addEventListener('mousedown', function(e) {
+                        e.preventDefault();
+                        registerClick(e.pageX, e.pageY);
+                    });
+                    window.addEventListener('touchstart', function(e) {
+                        e.preventDefault();
+                        var touch = e.touches ? e.touches[0] : e;
+                        registerClick(touch.pageX, touch.pageY);
+                    });
+                    function registerClick(cx, cy) {
+                        var dx = (game.player.x * 32 + 16) - (cx - cnvX + game.offsetX),
+                            dy = (game.player.y * 32 + 16) - (cy - cnvY + game.offsetY);
+                        if (Math.abs(dx) < Math.abs(dy)) {
+                            // vertical movement
+                            if (dy > 0) game.move(game.player, 0, -1);
+                            else game.move(game.player, 0, 1);
+                        } else {
+                            // horizontal movement
+                            if (dx > 0) game.move(game.player, -1, 0);
+                            else game.move(game.player, 1, 0);
+                        }
+                    }
 
                     // for animated tiles
                     setInterval(function() {

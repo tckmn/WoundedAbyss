@@ -4,7 +4,7 @@ Legend: n. == incomplete, [n] = complete
 - Add player movement:
     [1] Allow movement with arrow keys
     [2] "Collision detection" so player can't move onto objects
-    3. Allow movement with mouse and touch
+    [3] Allow movement with mouse and touch
 - Add scrolling:
     [1] Fixed level size and let it overflow
     [2] Write a "scroll" function to move the viewport
@@ -13,3 +13,4 @@ Legend: n. == incomplete, [n] = complete
     1. Figure out a format
     2. Use it
 - requestAnimationFrame instead of setInterval
+- make touch in IE work with weird pointer event stuff
